@@ -1,6 +1,6 @@
 ---
 slug: cypress-in-gitlab-pipeline
-title: "Cypress: Setting up the first acceptance tests in Gitlab CI pipeline"
+title: "Cypress: Setting up the first acceptance tests in GitLab CI pipeline"
 tags: [gitlab, cypress]
 ---
 
@@ -8,7 +8,7 @@ Late evening calls, reverted releases, lost revenue, and eventually fear of touc
 
 <!--truncate-->
 
-We at Kiwi.com use Cypress.io for some time, and we already had to rethink how we write such tests to keep them efficient and stable. One topic that plays a role in it sometimes remains forgotten: configuration. In this post, we would like to share with you some tips on how we now set up Cypress tests with Typescript support for a typical Gitlab CI pipeline.
+We at Kiwi.com use Cypress.io for some time, and we already had to rethink how we write such tests to keep them efficient and stable. One topic that plays a role in it sometimes remains forgotten: configuration. In this post, we would like to share with you some tips on how we now set up Cypress tests with Typescript support for a typical GitLab CI pipeline.
 
 ![Cypress Desktop App](/blog/cypress-gitlab/cypress-app.png)
 
@@ -112,11 +112,11 @@ Small changes make wonders. Selecting elements on the page is no longer cumberso
 
 `cy.log` may seem unnecessary but we learned this a hard way. The complexity of both application and user scenarios tends to increase over time, real specs files are usually longer and when the test suddenly starts failing after months, it might be challenging to understand at first what the hell we do at that exact step, even with a screenshot or video recording. So make your future self happier by documenting each logical user step… or consider the [BDD approach with cucumber](https://github.com/TheBrainFamily/cypress-cucumber-preprocessor).
 
-## Going live in Gitlab CI
+## Going live in GitLab CI
 
 Alright, we’ve implemented the first test and it passes locally, now it’s important to incorporate it to our continuous integration to make sure our application works before we merge our changes.
 
-As we use Gitlab CI, we’re gonna extend our `.gitlab-ci.yml` file:
+As we use GitLab CI, we’re gonna extend our `.gitlab-ci.yml` file:
 
 ```yaml
 variables:
@@ -151,7 +151,7 @@ cypress:
 
 Again, your exact configuration will vary depending on your use case and used tech stack, but here are some important points:
 
-1. Cypress needs binaries for its execution, so if we cache `node_modules` dependencies in Gitlab CI cache, we define where such binaries should be stored with a `CYPRESS_CACHE_FOLDER` variable. Then we have to include this path in the cache.
+1. Cypress needs binaries for its execution, so if we cache `node_modules` dependencies in GitLab CI cache, we define where such binaries should be stored with a `CYPRESS_CACHE_FOLDER` variable. Then we have to include this path in the cache.
 1. Notice we use `yarn.lock` as a key. This enables us to reuse cache even between different branches if dependencies haven’t changed.
 1. We run our tests in headless chrome and store screenshots and video recordings if it fails.
 1. To run tests successfully, we had to tell Cypress against which URL it should be run. Such URL is usually created dynamically depending on the branch name. We set it through `CYPRESS_BASE_URL` variable. Notice we had to specify the environment name in the job definition too: `review/$CI_COMMIT_REF_SLUG` in our case. This is necessary to have access to the environment variables related to the specific environment and should usually correspond 1:1 to the job definition of your deployment.
@@ -168,16 +168,16 @@ Or almost nothing while the job execution hung up:
 
 ![Cypress process hung up in CI](/blog/cypress-gitlab/timeout-ci.png)
 
-The usual common denominator of these issues occurring only in Gitlab CI is virtual shared memory. The job runner always runs some Docker image and the default setting (64 MB) is too small for a modern browser.
+The usual common denominator of these issues occurring only in GitLab CI is virtual shared memory. The job runner always runs some Docker image and the default setting (64 MB) is too small for a modern browser.
 
-You have several options: either ask DevOps to change Gitlab configuration to run Docker images with bigger shared memory (with `--shm-size` an argument to docker run command where it’s questionable what’s enough), or add shm to volumes (`/dev/shm:/dev/shm`), or change IPC mode (`--ipc=host` which might be refused due to security concerns), or you can just disable it for chromium browsers.
+You have several options: either ask DevOps to change GitLab configuration to run Docker images with bigger shared memory (with `--shm-size` an argument to docker run command where it’s questionable what’s enough), or add shm to volumes (`/dev/shm:/dev/shm`), or change IPC mode (`--ipc=host` which might be refused due to security concerns), or you can just disable it for chromium browsers.
 
 To do so, use [Cypress Browser Launch API](https://docs.cypress.io/api/plugins/browser-launch-api.html) to alter command-line arguments:
 
 ```js
 module.exports = (
   on: Cypress.PluginEvents, 
-  config: Cypress.PluginConfigOptions
+  config: Cypress.PluginConfigOptions,
 ) => {
   on("before:browser:launch", (browser = {}, launchOptions) => {
     if (browser.family === "chromium") {
@@ -190,6 +190,12 @@ module.exports = (
 ```
 
 Chrome will fall back to using temp files instead.
+
+:::tip Didn't help?
+After several attempts, we found out that using X virtual framebuffer (Xvfb) with Chrome also greatly increased stability:
+
+`xvfb-run cypress run -b chrome`
+:::
 
 ## Growing up
 
@@ -205,9 +211,9 @@ cypress:
   parallel: 3
 ```
 
-With `parallel: 3` Gitlab CI will schedule three parallel jobs that will execute the same script. That would normally lead to executing tests three times, but thanks to `--record` flag, Cypress will send all spec files to Dashboard service first and Dashboard redistributes tests back to Gitlab runners based on previous runs.
+With `parallel: 3` GitLab CI will schedule three parallel jobs that will execute the same script. That would normally lead to executing tests three times, but thanks to `--record` flag, Cypress will send all spec files to Dashboard service first and Dashboard redistributes tests back to GitLab runners based on previous runs.
 
-Don’t forget that you have to set `CYPRESS_RECORD_KEY` environment variable to be able to use Dashboard with `--record` flag:
+Don’t forget that you have to set `CYPRESS_RECORD_KEY` environment variable in GitLab to be able to use Dashboard with `--record` flag:
 
 ![Setting CI variables in Gitlab](/blog/cypress-gitlab/ci-variables.png)
 
