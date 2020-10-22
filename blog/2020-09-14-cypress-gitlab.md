@@ -23,7 +23,7 @@ Beginnings are fairly easy and well described in the [documentation](https://doc
 
 Notice that we use monorepo setup with [yarn workspaces](https://classic.yarnpkg.com/en/docs/workspaces/) — our tests are placed there along with our frontend. To get that, we had to change some paths in `cypress.json`:
 
-```json
+```json title="cypress.json"
 {
   "fixturesFolder": "src/fixtures",
   "integrationFolder": "src/tests",
@@ -36,14 +36,14 @@ Notice that we use monorepo setup with [yarn workspaces](https://classic.yarnpkg
 
 Every time we run a test, all screenshots and videos are stored in the `assets` folder. Trust me, you don’t want to commit it accidentally, so we will add the following lines to `.gitignore` with possible env file:
 
-```
+```txt title=".gitignore"
 assets
 cypress.env.json
 ```
 
 As we want to follow the best practices and write clean code, we will add ESLint too. Since it’s already there for the whole repository, we need to just extend it: `yarn workspace cypress-tests add eslint-plugin-cypress --dev` to install [eslint-plugin-cypress](https://www.npmjs.com/package/eslint-plugin-cypress) in our cypress workspace and then we create `.eslintrc.js`:
 
-```js
+```js title=".eslintrc.js"
 module.exports = {
   extends: ["plugin:cypress/recommended"],
   plugins: ["eslint-plugin-cypress"],
@@ -62,7 +62,7 @@ Now it’s about the time to finally add some tests. For the beginning, we will 
 
 ![Test run](/blog/cypress-gitlab/test-run.gif)
 
-```js
+```js title="src/tests/intro.spec.ts"
 describe("Landing page", () => {
   it("shows navigation menu", () => {
     cy.visit("/");
@@ -84,7 +84,7 @@ We can do a lot better! In the beginning, we might be tempted to add a custom co
 1. In `tsconfig.json`, we add support for types: `"types": ["cypress", "@types/testing-library__cypress"]`.
 1. We upgrade `src/support/index.ts` file to make use of it:
 
-```js
+```js title="src/support/index.ts"
 import "@testing-library/cypress/add-commands";
 import { configure } from "@testing-library/cypress";
 
@@ -95,7 +95,7 @@ configure({ testIdAttribute: "data-test" });
 
 And this is how we rewrite our test:
 
-```js
+```js title="src/tests/intro.spec.ts"
 describe("Landing page", () => {
   it("shows navigation menu", () => {
     cy.visit("/");
@@ -174,7 +174,7 @@ You have several options: either ask DevOps to change GitLab configuration to ru
 
 To do so, use [Cypress Browser Launch API](https://docs.cypress.io/api/plugins/browser-launch-api.html) to alter command-line arguments:
 
-```js
+```js title="src/plugins/index.ts"
 module.exports = (
   on: Cypress.PluginEvents, 
   config: Cypress.PluginConfigOptions,
@@ -227,7 +227,7 @@ Luckily, Cypress.io team has [just released version 5.x with test retries](https
 
 Neverlethess, as we learned the hard way, it might not be that easy even with retries — especially if you didn’t follow the best practices before. In case we would implement our first test as follow:
 
-```js
+```js title="src/tests/intro.spec.ts"
 describe("Landing page", () => {
   before(() => {     
     cy.visit("/");
