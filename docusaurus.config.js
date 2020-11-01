@@ -79,6 +79,9 @@ module.exports = {
           editUrl: "https://github.com/jaroslav-kubicek/blog/edit/master/",
         },
         blog: {
+          feedOptions: {
+            type: "all",
+          },
           showReadingTime: true,
           routeBasePath: "/",
           editUrl: "https://github.com/jaroslav-kubicek/blog/edit/master/",
