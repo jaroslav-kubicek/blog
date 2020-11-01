@@ -81,7 +81,7 @@ module.exports = {
         blog: {
           showReadingTime: true,
           routeBasePath: "/",
-          editUrl: "https://github.com/jaroslav-kubicek/blog/edit/master/blog/",
+          editUrl: "https://github.com/jaroslav-kubicek/blog/edit/master/",
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
