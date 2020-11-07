@@ -1,7 +1,7 @@
 module.exports = {
   title: "Kubajz.dev",
   tagline: "Personal blog about programing & stuff.",
-  url: "https://kubajz.dev/",
+  url: "https://kubajz.dev",
   baseUrl: "/",
   onBrokenLinks: "throw",
   favicon: "img/favicon.ico",
