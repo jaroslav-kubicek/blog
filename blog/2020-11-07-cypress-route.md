@@ -168,25 +168,25 @@ First, we have to enable it in the config:
 }
 ```
 
-Such an option allows us to use new `cy.route2` function. As opposed to `cy.route` and `cy.server` counterparts, it's possible to intercept, spy, or mock any type of request within the application, including a load of a page document, fetch calls, or static assets. 
+Such an option allows us to use new `cy.route2` function. As opposed to `cy.route` and `cy.server` counterparts, it"s possible to intercept, spy, or mock any type of request within the application, including a load of a page document, fetch calls, or static assets. 
 
-Therefore, we're gonna replace our `cy.server({ onAnyRequest })` command with the following code:
+Therefore, we"re gonna replace our `cy.server({ onAnyRequest })` command with the following code:
 
 ```ts
-const baseUrl = Cypress.config().baseUrl || '';
+const baseUrl = Cypress.config().baseUrl || "";
 
-cy.route2('**', (req) => {
+cy.route2("**", (req) => {
   if (req.url.includes(baseUrl)) {
-    req.headers['Authorization'] = `Bearer ${token}`;
+    req.headers["Authorization"] = `Bearer ${token}`;
   }
 });
 ```
 
-_Voilà!_ We've won our struggle against relentless authentication: no more workarounds in our test code & the road to test automation is free.
+_Voilà!_ We"ve won our struggle against relentless authentication: no more workarounds in our test code & the road to test automation is free.
 
 ## Conclusion
 
-Network stubbing was historically one of Cypress weaker points as it lacked first-class support for intercepting _any_ application request. Although the API is still experimental, and we still experience issues with requests made in service workers, for example, it's great to see the big progress which comes with `cy.route2` function.
+Network stubbing was historically one of Cypress weaker points as it lacked first-class support for intercepting _any_ application request. Although the API is still experimental, and we still experience issues with requests made in service workers, for example, it"s great to see the big progress which comes with `cy.route2` function.
 
 ## Full implementation
 
@@ -197,14 +197,14 @@ const login = (
   visitOptions?: Cypress.VisitOptions,
 ): Cypress.Chainable<Cypress.AUTWindow> => {
   const options = {
-    method: 'POST',
-    url: 'https://www.googleapis.com/oauth2/v4/token',
+    method: "POST",
+    url: "https://www.googleapis.com/oauth2/v4/token",
     body: {
-      client_id: Cypress.env('CLIENT_ID'),
-      client_secret: Cypress.env('CLIENT_SECRET'),
-      refresh_token: Cypress.env('REFRESH_TOKEN'),
-      grant_type: 'refresh_token',
-      audience: Cypress.env('IAP_AUDIENCE'),
+      client_id: Cypress.env("CLIENT_ID"),
+      client_secret: Cypress.env("CLIENT_SECRET"),
+      refresh_token: Cypress.env("REFRESH_TOKEN"),
+      grant_type: "refresh_token",
+      audience: Cypress.env("IAP_AUDIENCE"),
     },
     // Restrict cypress from showing errored response by default.
     // It would dump the whole request object, including env values.
@@ -222,16 +222,16 @@ const login = (
 
     const { id_token: token } = response.body;
 
-    const baseUrl = Cypress.config().baseUrl || '';
+    const baseUrl = Cypress.config().baseUrl || "";
     // ignore requests to assets specified by their extension
     //
     // will be ignored:
     // https://example.com/file.svg 
     // https://example.com/file.css?v=a12c
-    const extensionsToIgnore = ['jsx?', 'svg', 's?css', 'jpe?g', 'png'];
+    const extensionsToIgnore = ["jsx?", "svg", "s?css", "jpe?g", "png"];
     const patternGroup = extensionsToIgnore
       .map((ext) => `.*\\.${ext}(\\?.*)?$`)
-      .join('|');
+      .join("|");
     const matchURL = new RegExp(`^(.(?!${patternGroup}))*$`);
 
     cy.route2(
@@ -240,12 +240,12 @@ const login = (
       },
       (req) => {
         if (req.url.includes(baseUrl)) {
-          req.headers['Authorization'] = `Bearer ${token}`;
+          req.headers["Authorization"] = `Bearer ${token}`;
         }
       },
     );
 
-    return cy.visit(path || '/', {
+    return cy.visit(path || "/", {
       headers: { Authorization: `Bearer ${token}` },
       ...visitOptions,
     });
@@ -260,5 +260,5 @@ declare global {
   }
 }
 
-Cypress.Commands.add('login', login);
+Cypress.Commands.add("login", login);
 ```
