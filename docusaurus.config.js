@@ -1,12 +1,12 @@
 module.exports = {
-  title: "My Site",
-  tagline: "The tagline of my site",
-  url: "https://your-docusaurus-test-site.com",
+  title: "Kubajz.dev",
+  tagline: "Personal blog about programing & stuff.",
+  url: "https://kubajz.dev/",
   baseUrl: "/",
   onBrokenLinks: "throw",
   favicon: "img/favicon.ico",
-  organizationName: "facebook", // Usually your GitHub org/user name.
-  projectName: "docusaurus", // Usually your repo name.
+  organizationName: "jaroslav-kubicek", // Usually your GitHub org/user name.
+  projectName: "blog", // Usually your repo name.
   themeConfig: {
     gtag: {
       trackingID: "G-ZVDDRND2W4",
