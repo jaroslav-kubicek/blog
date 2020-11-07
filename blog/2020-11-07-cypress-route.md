@@ -1,6 +1,6 @@
 ---
-slug: cypress-route
-title: "Use new Cypress cy.route2() to bypass authentication"
+slug: cypress-authentication-route2
+title: "Use new Cypress cy.route2() to mock authentication process"
 image: /blog/cypress-route/two-factor-auth.png
 description: "Auth2 flows and single sign-on authentications posed a barrier to Cypress tests, learn how we leveraged new cy.route2 function to go around it."
 tags: [cypress]
