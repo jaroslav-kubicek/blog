@@ -1,22 +1,24 @@
 ---
 slug: cypress-route
-title: "How to use new cy.route2() to bypass IAM authentication"
+title: "Use new Cypress cy.route2() to bypass authentication"
+image: /blog/cypress-route/two-factor-auth.png
+description: "Auth2 flows and single sign-on authentications posed a barrier to Cypress tests, learn how we leveraged new cy.route2 function to go around it."
 tags: [cypress]
 ---
 
-
+![Two factor Authentication](/blog/cypress-route/two-factor-auth.png)
 
 <!--truncate-->
 
 In the previous article ["Cypress: Setting up the first acceptance tests in GitLab CI pipeline"](/cypress-in-gitlab-pipeline), I showed you how to scaffold Cypress tests with TypeScript support, run tests in typical GitLab pipeline and avoid some common pitfalls.
 
-Such initial setup might be already all you need to add more tests to cover relevant user scenarios. Unless your whole application is hidden behind Single Sign-on managed by Google Identity and Access Management (IAM).
+Such initial setup might be already all you need to add more tests to cover relevant user scenarios. Unless your whole application is hidden behind OAuth2 flow or single sign-on, in our case managed by Google Identity and Access Management (IAM).
 
 ## Authentication as barrier
 
-To get through such authentication process, it's the best to make application think we're coming to the web already as signed in user. Cypress has known limitation to visit only one superdomain per test and any redirection to third-party service presents an impassable barrier.
+To get through such an authentication process, it's best to make the application think we're coming to the web already as signed-in user. Cypress has known limitations to visit only one superdomain per test and any redirection to third-party service presents an impassable barrier.
 
-On top of that, our Single Sign-on used for internal apps requires usage of two-step verification via mobile application.
+On top of that, our single sign-on used for internal apps requires the usage of two-step verification via mobile application.
 
 We will take the following steps to go around this process:
 
@@ -26,7 +28,7 @@ We will take the following steps to go around this process:
 
 ## Adding custom command
 
-Since all our tests are going to share the need for bypassing the authentication, we will implement it as custom command which we can then execute instead of `cy.visit`:
+Since all our tests are going to share the need for bypassing the authentication, we will implement it as a custom command which we can then execute instead of `cy.visit`:
 
 ```ts title="src/support/commands.ts"
 Cypress.Commands.add(
@@ -114,11 +116,11 @@ describe("Dashboard", () => {
 })
 ```
 
-Our morale drops because test run very likely fails. It turns out that the application sends request to another backend to fetch the data for dashboard, but this service doesn't have our auth token!
+Our morale drops because test run very likely fails. It turns out that the application sends a request to another backend to fetch the data for the dashboard, but this service doesn't have our auth token!
 
 ## Network stubbing - the old way
 
-If we worked with just normal OAuth 2 flow, we could redeem ourself by simply storing token in cookies, but we haven't found a reliable way to make Google IAM happy this way.
+If we worked with just normal OAuth 2 flow, we could redeem ourselves by simply storing token in cookies, but we haven't found a reliable way to make Google IAM happy this way.
 
 For that reason, we decided to use network stubbing instead which relies on Cypress `cy.server`. We put the following code just before `cy.visit`: 
 
@@ -135,14 +137,12 @@ cy.server({
 ```
 
 :::tip XHR vs fetch
-Most of the modern applications nowadays use rather [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) than [XMLHttpRequest](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest) which is what Cypress expects to be used.
-
-The most common workaround is to remove fetch from window object and let an application fallback to polyfill with XHR underneath.
+Most of the modern applications nowadays use [Fetch API](https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API) while Cypress still expects [XMLHttpRequest](https://developer.mozilla.org/en-US/docs/Web/API/XMLHttpRequest) to be used. The most common workaround is to remove fetch from window object and let an application fallback to polyfill with XHR underneath.
 
 See [Experimental Fetch Polyfill](https://www.cypress.io/blog/2020/06/29/experimental-fetch-polyfill/) blog post for more details.
 :::
 
-With `onAnyRequest` option passed to `cy.server`, we can intercept - as you might guess - any request coming from the application for the duration of test.
+With `onAnyRequest` option passed to `cy.server`, we can intercept - as you might guess - any request coming from the application for the duration of the test.
 
 By now, we had everything necessary to implement our test scenarios. Until we got into trouble with authentication again when we tried to go from dashboard to the detail of one specific booking.
 
@@ -152,9 +152,9 @@ Suppose we have a link like this:
 <a href="/bookings/detail/1234567">1234567</a>
 ```
 
-As soon as we click on it in a test, we got HTTP code 401 unauthorized. That's because our Cypress network stubbing worked well with XHR requests only. This is sufficient for single page applications (SPA), but the application in our case consist of _multiple_ SPAs: For example, if you navigate to dashboard, all your interaction there is handled by ajax XHR calls as in a typical SPA. However, clicking on the link above brings you to another SPA or how we call it, _module_, resulting in a new page load, not XHR call.
+As soon as we click on it in a test, we got HTTP code 401 unauthorized. That's because our Cypress network stubbing worked well with XHR requests only. This is sufficient for single-page applications (SPA), but the application in our case consists of _multiple_ SPAs: For example, if you navigate to dashboard, all your interaction there is handled by ajax XHR calls as in a typical SPA. However, clicking on the link above brings you to another SPA or how we call it, _module_, resulting in a new page load, not XHR call.
 
-For sure, we could workaround this: select the link element first, retrieve its href attribute and pass it into `cy.visit`, but good news ahead! Cypress 5.x offers now far better stubbing options.
+For sure, we could work around this: select the link element first, retrieve its href attribute and pass it into `cy.visit`, but good news ahead! Cypress 5.x offers now far better stubbing options.
 
 ## New cy.route2 on the stage
 
@@ -168,7 +168,7 @@ First, we have to enable it in the config:
 }
 ```
 
-Such option allows us to use new `cy.route2` function. As opposed to `cy.route` and `cy.server` counterparts, it's possible to intercept, spy or mock any type of request within the application, including the load of page document, fetch calls or static assets. 
+Such an option allows us to use new `cy.route2` function. As opposed to `cy.route` and `cy.server` counterparts, it's possible to intercept, spy, or mock any type of request within the application, including a load of a page document, fetch calls, or static assets. 
 
 Therefore, we're gonna replace our `cy.server({ onAnyRequest })` command with the following code:
 
@@ -182,9 +182,11 @@ cy.route2('**', (req) => {
 });
 ```
 
+_Voilà!_ We've won our struggle against relentless authentication: no more workarounds in our test code & the road to test automation is free.
+
 ## Conclusion
 
-Network stubbing was historically one of Cypress weaker points as it lacked first-class support for intercepting _any_ application request. Although the API is still experimental, and we still experience issues with requests made in service workers for example, it's great to see the big progress which comes with `cy.route2` function.
+Network stubbing was historically one of Cypress weaker points as it lacked first-class support for intercepting _any_ application request. Although the API is still experimental, and we still experience issues with requests made in service workers, for example, it's great to see the big progress which comes with `cy.route2` function.
 
 ## Full implementation
 
