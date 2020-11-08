@@ -9,7 +9,7 @@
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
     "serve": "docusaurus serve",
-    "lint": "yarn eslint '*.{js,ts,tsx}' --quiet --report-unused-disable-directives",
+    "lint": "yarn eslint '*.{js,ts,tsx}' '**/*.{js,ts,tsx}' --quiet --report-unused-disable-directives",
     "ts": "yarn tsc",
     "test": "yarn lint && yarn tsc"
   },
@@ -36,7 +36,7 @@
   "devDependencies": {
     "@docusaurus/module-type-aliases": "^2.0.0-alpha.51",
     "@tsconfig/docusaurus": "^1.0.2",
-    "@types/react": "^16.9.53",
+    "@types/react": "^16.9.56",
     "@types/react-helmet": "^6.1.0",
     "@types/react-router-dom": "^5.1.6",
     "@typescript-eslint/eslint-plugin": "^4.5.0",

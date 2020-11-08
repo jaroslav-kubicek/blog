@@ -9,5 +9,6 @@
     // Do not output any files
     "noEmit": true
   },
-  "extends": "@tsconfig/docusaurus/tsconfig.json"
+  "extends": "@tsconfig/docusaurus/tsconfig.json",
+  "include": ["src/"]
 }
