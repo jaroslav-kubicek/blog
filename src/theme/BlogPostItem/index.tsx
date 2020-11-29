@@ -1,5 +1,4 @@
 import React from "react";
-// @ts-expect-error: No typings for @theme-original
 import OriginalBlogPostItem from "@theme-original/BlogPostItem";
 
 import Subscribe from "../../components/Subscribe";
