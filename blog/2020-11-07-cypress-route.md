@@ -122,7 +122,7 @@ Our morale drops because test run very likely fails. It turns out that the appli
 
 If we worked with just normal OAuth 2 flow, we could redeem ourselves by simply storing token in cookies, but we haven't found a reliable way to make Google IAM happy this way.
 
-For that reason, we decided to use `cy.incercept` function to stub network requests instead. We put the following code just before `cy.visit` statement:
+For that reason, we decided to use `cy.intercept` function to stub network requests instead. We put the following code just before `cy.visit` statement:
 
 ```js title="src/support/commands.ts"
 const baseUrl = Cypress.config().baseUrl || "";
@@ -207,7 +207,7 @@ cy.route2("**", (req) => {
 });
 ```
 
-_Voilà!_ We"ve won our struggle against relentless authentication: no more workarounds in our test code & the road to test automation is free.
+_Voilà!_ We've won our struggle against relentless authentication: no more workarounds in our test code & the road to test automation is free.
 
 </details>
 
