@@ -118,6 +118,31 @@ describe("Dashboard", () => {
 
 Our morale drops because test run very likely fails. It turns out that the application sends a request to another backend to fetch the data for the dashboard, but this service doesn't have our auth token!
 
+## Network stubbing
+
+If we worked with just normal OAuth 2 flow, we could redeem ourselves by simply storing token in cookies, but we haven't found a reliable way to make Google IAM happy this way.
+
+For that reason, we decided to use `cy.incercept` function to stub network requests instead. We put the following code just before `cy.visit` statement:
+
+```js title="src/support/commands.ts"
+const baseUrl = Cypress.config().baseUrl || "";
+
+cy.intercept("**", (req) => {
+  if (req.url.includes(baseUrl)) {
+    req.headers["Authorization"] = `Bearer ${token}`;
+  }
+});
+```
+
+_Voilà!_ Now every request made by the application automatically gets our token too. We've won our struggle against relentless authentication.
+
+> Note: This section on network stubbing was rewritten to reflect the changes which came out with the Cypress version 6.0.0 and a new `cy.intercept()` function.
+
+<details>
+<summary>
+<em>Show network stubbing for Cypress version &lt; 6.0.0.</em>
+</summary>
+
 ## Network stubbing - the old way
 
 If we worked with just normal OAuth 2 flow, we could redeem ourselves by simply storing token in cookies, but we haven't found a reliable way to make Google IAM happy this way.
@@ -156,7 +181,7 @@ As soon as we click on it in a test, we got HTTP code 401 unauthorized. That's b
 
 For sure, we could work around this: select the link element first, retrieve its href attribute and pass it into `cy.visit`, but good news ahead! Cypress 5.x offers now far better stubbing options.
 
-## New cy.route2 on the stage
+#### New cy.route2 on the stage
 
 Starting with Cypress version 5.0, there is a new, experimental network stubbing mechanism.
 
@@ -183,6 +208,8 @@ cy.route2("**", (req) => {
 ```
 
 _Voilà!_ We"ve won our struggle against relentless authentication: no more workarounds in our test code & the road to test automation is free.
+
+</details>
 
 ## Conclusion
 
@@ -234,7 +261,7 @@ const login = (
       .join("|");
     const matchURL = new RegExp(`^(.(?!${patternGroup}))*$`);
 
-    cy.route2(
+    cy.intercept(
       {
         url: matchURL,
       },

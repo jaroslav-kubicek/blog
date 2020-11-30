@@ -158,6 +158,10 @@ Again, your exact configuration will vary depending on your use case and used te
 
 ## …annnnd it fails
 
+> This article was written before version 6.0.0 came out which now passes `disable-dev-shm-usage` launch switch to chrome browser by default. Following workaround is therefore no longer necessary as it's done automatically for you.
+>
+> If you are still facing such issues, check out the amount of available resources in your CI or try `xvfb` mentioned below. 
+
 Suppose you pushed commits to the repository, a merge request went through review and was merged. Everything was up & green. Then you went to the office the next day and your colleague asked you to help with the failed job.
 
 The output shows a weird error:
