@@ -1,8 +1,8 @@
 ---
 slug: cypress-authentication-route2
-title: "Use new Cypress cy.route2() to mock authentication process"
+title: "Use new Cypress cy.intercept() to mock authentication process"
 image: /blog/cypress-route/two-factor-auth.png
-description: "Auth2 flows and single sign-on authentications posed a barrier to Cypress tests, learn how we leveraged new cy.route2 function to go around it."
+description: "Auth2 flows and single sign-on authentications posed a barrier to Cypress tests, learn how we leveraged new cy.intercept function to go around it."
 tags: [cypress]
 ---
 
@@ -213,7 +213,7 @@ _Voilà!_ We've won our struggle against relentless authentication: no more work
 
 ## Conclusion
 
-Network stubbing was historically one of Cypress weaker points as it lacked first-class support for intercepting _any_ application request. Although the API is still experimental, and we still experience issues with requests made in service workers, for example, it"s great to see the big progress which comes with `cy.route2` function.
+Network stubbing was historically one of Cypress weaker points as it lacked first-class support for intercepting _any_ application request. Although the API is still experimental, and we still experience issues with requests made in service workers, for example, it"s great to see the big progress which comes with `cy.intercept` function.
 
 ## Full implementation
 
