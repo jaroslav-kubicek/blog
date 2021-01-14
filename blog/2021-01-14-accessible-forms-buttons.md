@@ -6,7 +6,11 @@ description: "Accessibility matters. Learn how you can improve the experience in
 tags: [accessibility]
 ---
 
-TODO
+How much time do we spend on making the web more accessible? And how much on supporting outdated browsers like IE? The chances are that more of our visitors would likely benefit from improvements in the accessibility area, but they are invisible to our statistics and error reporting.
+
+Nonetheless, by today's post on this matter, I want to show you that it's not, in fact, that complicated to improve the audience's experience.
+
+We're going to look at forms specifically, using the awesome [Orbit component library](https://orbit.kiwi/) in code examples, but all rules mentioned here apply in general.
 
 ## Who is accessibility for?
 
@@ -44,7 +48,7 @@ Let's now look at the form where users set their new password, or they're able t
 
 A simplified implementation that uses Orbit components could look more or less as follows:
 
-```js title="SetPassword.tsx"
+```jsx title="SetPassword.tsx"
 const SetPassword = ({ onSubmit, onSkip }: Props) => {
   return (
     <Modal size="small">
@@ -122,17 +126,17 @@ This approach is called *progressive disclosure*. To illustrate it in a more rep
 
 ## Better mobile phone experience
 
-Let's now suppose that we ask for a security code of credit card in our application, a 3-digit verification number. No other characters are involved. Yet what type of keyboard we usually display to the user?
+Let's now suppose that we ask for a security code of credit card in our application, a 3-digit verification number. No other characters are involved. Yet what type of keyboard we usually display to the user on mobile devices?
 
 We could potentially switch input type to "number", but this is still too suboptimal. Although keyboards containing numbers are shown, most of the valuable space on IOS is still occupied by special characters:
 
-PICTURE OF KEYBOARD ON IOS FOR INPUT TYPE=NUMBER
+![iPhone keyboard for number](/blog/accessibility-forms/mobileNumberInput.png)
 
-On top of that, we got native decrement and increment buttons, which do not make sense there.
+On top of that, we got native decrement and increment buttons inside the input, which do not make sense there.
 
-There is a better way. If we set `inputmode="decimal"` on the input element, we get exactly what we expect.
+There is a better way. If we set `inputmode="decimal"` on the input element, we get exactly what we expect:
 
-PICTURE OF KEYBOARD ON IOS WITH inputmode="decimal"
+![iPhone keyboard for number](/blog/accessibility-forms/mobileDecimal.png)
 
 And as a cherry on the top, we can reward those who responsibly rely on password managers. By adding `autocomplete="cc-csc"` parameter, we help autocomplete tools of password managers recognize the true meaning of the field, so they make the right suggestions.
 
@@ -142,13 +146,20 @@ Check out the awesome [talk by Alex Holachek](https://www.youtube.com/watch?v=W6
 
 Nice, we've made a significant improvement! But before we wrap up the topic of accessibility, let's check buttons. If they contain text label, we're good to go, but what if we have a search bar that looks like this:
 
-IMAGE OF INPUT + SEARCH BUTTON WITH LUPE ICON
+![Search bar](/blog/accessibility-forms/searchBar.png)
 
-The meaning is clear for most of us, not so much for people with visual impairment since the button label consists solely of an SVG icon. Users relying on a screen reader will hear just a "button".
+The meaning is clear for most of us, not so for people with visual impairment since the button label consists solely of an SVG icon. Users relying on a screen reader will hear just a "button".
 
 Fortunately, all that we have to do is to use "aria-label" properly in such cases:
 
-CODE SAMPLE OF SEARCH BUTTON WITH LUPE ICON + LABEL
+```jsx
+const SearchBar = () => (
+  <Stack direction="row" spacing="XXSmall">
+    <InputField />
+    <Button iconLeft={<Search ariaLabel="Search" />} />
+  </Stack>
+);
+```
 
 As you can see, it's not that a hassle to improve the experience, even for screen readers.
 
@@ -158,7 +169,11 @@ There is an additional hidden secret known only to developers who responsibly te
 
 If you are using `@testing-library`, think about how you would select a button with a search icon only from the previous example if there are many buttons like that. With aria-label, the button becomes accessible even in your tests:
 
-CODE SAMPLE HOW TO USE GETBYLABELTEXT()
+```jsx
+const { getByLabelText } = render(<SearchBar />);
+
+expect(getByLabelText("Search")).toBeInTheDocument();
+```
 
 ## Further resources
 
