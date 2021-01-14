@@ -1,12 +1,16 @@
 ---
 slug: accessibility-forms-buttons
 title: "Accessibility in web forms"
-image: TODO
+image: /blog/accessibility-forms/signs.jpg
 description: "Accessibility matters. Learn how you can improve the experience in forms by a few simple steps on examples using the Orbit design system."
-tags: [accessibility]
+tags: [accessibility, orbit, testing-library]
 ---
 
+![accessibility hero image](/blog/accessibility-forms/signs.jpg)
+
 How much time do we spend on making the web more accessible? And how much on supporting outdated browsers like IE? The chances are that more of our visitors would likely benefit from improvements in the accessibility area, but they are invisible to our statistics and error reporting.
+
+<!--truncate-->
 
 Nonetheless, by today's post on this matter, I want to show you that it's not, in fact, that complicated to improve the audience's experience.
 
