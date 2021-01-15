@@ -183,6 +183,7 @@ expect(getByLabelText("Search")).toBeInTheDocument();
 
 - [A11y Coffee ☕️](https://a11y.coffee/)
 - [Building & Maintaining Accessible Experiences at Scale](https://www.youtube.com/watch?v=GxB3Tr-9WNA)
+- [Accessible Icon Buttons](https://www.sarasoueidan.com/blog/accessible-icon-buttons/)  
 - [Beyond Responsive Design: Building Mobile-Optimized Websites in React](https://www.youtube.com/watch?v=W6_KxNvRxr4)
 - [Accessibility as a First Class Citizen](https://www.youtube.com/watch?v=3RIYN93Zavs)
 - [Accessibility Developer Guide](https://www.accessibility-developer-guide.com/)
