@@ -1,7 +1,7 @@
 ---
 slug: tech-lead-reflection
 title: "What being Tech lead taught me"
-image: /blog/tech-lead-reflection/delegate.png
+image: /blog/tech-lead-reflection/health-check.png
 description: "What to do when people happen in your dev life."
 tags: []
 ---
