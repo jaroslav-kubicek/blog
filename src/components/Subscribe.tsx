@@ -20,6 +20,7 @@ const Subscribe = () => {
       // @ts-ignore */ /* prettier-ignore */}
         illustration={<Illustration name="Mailbox" />}
         title="Interesting? Subscribe to get the next article."
+        description="Get message every time I post a new blog post. No spam."
       >
         <InputField inlineLabel label="Your email:" type="email" name="EMAIL" id="mce-EMAIL" />
         <Button submit>Subscribe</Button>
