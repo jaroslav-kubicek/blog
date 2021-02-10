@@ -17,6 +17,7 @@
     "@docusaurus/core": "2.0.0-alpha.70",
     "@docusaurus/preset-classic": "2.0.0-alpha.70",
     "@kiwicom/orbit-components": "^0.109.1",
+    "@kiwicom/orbit-design-tokens": "^0.13.2",
     "@mdx-js/react": "^1.6.21",
     "clsx": "^1.1.1",
     "react": "^17.0.1",

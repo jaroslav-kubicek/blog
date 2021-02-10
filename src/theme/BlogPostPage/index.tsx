@@ -10,6 +10,7 @@ import ButtonLink from "@kiwicom/orbit-components/lib/ButtonLink";
 
 import Subscribe from "../../components/Subscribe";
 import Comments from "../../components/Comments";
+import OrbitThemeProvider from "../../components/OrbitThemeProvider";
 
 // done according to https://github.com/facebook/docusaurus/blob/master/packages/docusaurus-theme-classic/src/theme/BlogPostPage/index.tsx
 const BlogPostPage = (props): JSX.Element => {
@@ -19,44 +20,46 @@ const BlogPostPage = (props): JSX.Element => {
   const { hide_table_of_contents: hideTableOfContents } = frontMatter;
 
   return (
-    <Layout title={metadata.title} description={metadata.description}>
-      {BlogPostContents && (
-        <div className="container margin-vert--xl">
-          <div className="row">
-            <div className="col col--2">
-              <BlogSidebar sidebar={sidebar} />
-            </div>
-            <main className="col col--8">
-              <BlogPostItem frontMatter={frontMatter} metadata={metadata} isBlogPostPage>
-                <BlogPostContents />
-              </BlogPostItem>
-              <Stack>
-                {editUrl && (
-                  <Stack align="center" direction="row" justify="around">
-                    <ButtonLink href={editUrl} rel="noreferrer noopener">
-                      <IconEdit />
-                      Edit this page
-                    </ButtonLink>
-                  </Stack>
+    <OrbitThemeProvider>
+      <Layout title={metadata.title} description={metadata.description}>
+        {BlogPostContents && (
+          <div className="container margin-vert--xl">
+            <div className="row">
+              <div className="col col--2">
+                <BlogSidebar sidebar={sidebar} />
+              </div>
+              <main className="col col--8">
+                <BlogPostItem frontMatter={frontMatter} metadata={metadata} isBlogPostPage>
+                  <BlogPostContents />
+                </BlogPostItem>
+                <Stack>
+                  {editUrl && (
+                    <Stack align="center" direction="row" justify="around">
+                      <ButtonLink href={editUrl} rel="noreferrer noopener">
+                        <IconEdit />
+                        Edit this page
+                      </ButtonLink>
+                    </Stack>
+                  )}
+                  <Subscribe />
+                  <Comments />
+                </Stack>
+                {(metadata.nextItem || metadata.prevItem) && (
+                  <div className="margin-vert--xs">
+                    <BlogPostPaginator nextItem={metadata.nextItem} prevItem={metadata.prevItem} />
+                  </div>
                 )}
-                <Subscribe />
-                <Comments />
-              </Stack>
-              {(metadata.nextItem || metadata.prevItem) && (
-                <div className="margin-vert--xs">
-                  <BlogPostPaginator nextItem={metadata.nextItem} prevItem={metadata.prevItem} />
+              </main>
+              {!hideTableOfContents && BlogPostContents.toc && (
+                <div className="col col--2">
+                  <TOC toc={BlogPostContents.toc} />
                 </div>
               )}
-            </main>
-            {!hideTableOfContents && BlogPostContents.toc && (
-              <div className="col col--2">
-                <TOC toc={BlogPostContents.toc} />
-              </div>
-            )}
+            </div>
           </div>
-        </div>
-      )}
-    </Layout>
+        )}
+      </Layout>
+    </OrbitThemeProvider>
   );
 };
 
