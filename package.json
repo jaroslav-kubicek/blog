@@ -9,7 +9,7 @@
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
     "serve": "docusaurus serve",
-    "lint": "yarn eslint '*.{js,ts,tsx}' '**/*.{js,ts,tsx}' --quiet --report-unused-disable-directives",
+    "lint": "yarn eslint '*.{js,ts,tsx}' '**/*.{js,ts,tsx}' --ignore-path .gitignore --quiet --report-unused-disable-directives",
     "ts": "yarn tsc",
     "test": "yarn lint && yarn tsc"
   },
