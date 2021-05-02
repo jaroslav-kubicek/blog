@@ -1,0 +1,228 @@
+---
+slug: testing-emails-in-cypress
+title: "Testing emails with Cypress.io"
+image: /blog/cypress-mailing/flow.png
+description: "TODO"
+tags: [cypress]
+---
+
+import DotSeparator from '../src/components/DotSeparator';
+
+Emails as a crucial part of the customer journey? Well-known puzzle, especially for all of us working on B2C projects, e.g., in the e-commerce or travel sector. We'd been working on such features, and what always puzzled me how much time we spent making sure we aren't introducing any regression repeatedly. We can send an incorrect email only once.
+
+Fortunately, we realized emails today are nothing but an HTML page. And Cypress excels in that.
+
+<!--truncate-->
+
+## Ideation
+
+After quick brainstorming, we came up with the following plan:
+
+1. We'll call REST API to send a specific email (e.g. boarding passes)
+2. Email should be delivered to our inbox
+3. We render its content as an HTML page to assert it contains certain elements
+
+![Email flow](/blog/cypress-mailing/flow.png)
+
+## Preconditions
+
+To not end up with flaky tests, we must assure the system's high predictability, and reliance on an email message being transmitted over the network will always pose some risk to automation.
+
+Additionally, there might be another burden of maintaining a solution for our test inbox: generation of unique email addresses for API calls that are not idempotent (i.e. actions that can be triggered only once to produce the same expected outcome), filtering out messages correctly when multiple tests are running or waiting for email delivery.
+
+Fortunately, there are ready-made solutions for QA purposes. We selected [Mailosaur](https://mailosaur.com/) as it has all the required functionality, automatically parses the content, and offers Cypress client library on top of it.
+
+## Picking up an email from inbox
+
+Let's take off first with requests to our API. In our scenario, we want to message customers with boarding passes. This is a matter of calling `cy.request` command:
+
+```js
+const payload = { bookingId: 123456 /* ... */ };
+const url = `${Cypress.env("MAILING_BASE_URL")}/api/emails/boarding`;
+
+cy.request({
+  method: "POST",
+  url,
+  body: payload,
+  headers: {
+    Authentication: Cypress.env("MAILING_API_AUTH"),
+  },
+});
+```
+
+Notice our mailing API expects `bookingId`, not email. Internally it checks that boarding passes indeed exist for a given id, and then it sends the desired email.
+
+The booking id in our test relates to the email address we generated in Mailosaur. Picking it up from the inbox is then just a matter of one command:
+
+```js
+cy.mailosaurGetMessage(
+  serverId,
+  {
+    sentTo: email,
+  },
+  {
+    receivedAfter: timestamp,
+    timeout: 1000 * 60 * 2,
+  }
+).then(message => {/* ... */});
+```
+
+Wait a sec, how did we get `mailosaurGetMessage`? This comes from the official [cypress-mailosaur](https://mailosaur.com/docs/frameworks-and-tools/cypress/) plugin. It wraps Mailosaur APIs into convenient commands. For example, we use fixed email here, but for registration, we could use another such command, `mailosaurGenerateEmailAddress`, which would provide us with a new unique address for every test run.
+
+<DotSeparator />
+
+And because most of our tests will follow this pattern of calling the API and then accessing Mailosaur inbox, we shouldn't miss an opportunity to define it as a single custom command, here's the full source code:
+
+```js
+const sendEmail = ({ email, payload, apiEndpoint }) => {
+  const now = new Date();
+  const serverId = Cypress.env("MAILOSAUR_SERVER");
+  const baseApiUrl = Cypress.env("MAILING_BASE_URL");
+  const url = `${baseApiUrl}${apiEndpoint}`;
+
+  cy.request({
+    method: "POST",
+    url,
+    body: payload,
+    headers: {
+      Authentication: Cypress.env("MAILING_API_AUTH"),
+    },
+    // Cypress dumps the whole request including auth headers on error by default
+    // So in order to avoid credential leaking we handle errors on our own
+    failOnStatusCode: false,
+  }).then((response) => {
+    if (!response.isOkStatusCode) {
+      const { status } = response;
+
+      throw new Error(
+        `Unexpected Mailing API error, url: ${url}, status: ${status}`,
+      );
+    }
+  });
+
+  return cy.mailosaurGetMessage(
+    serverId,
+    {
+      sentTo: email,
+    },
+    {
+      receivedAfter: now,
+      timeout: 1000 * 60 * 2, // wait for email to arrive for 2 mins
+    },
+  );
+};
+
+Cypress.Commands.add("sendEmail", sendEmail);
+```
+
+Nice! At this point, we know how we're going to send and receive emails for little costs. Mailosaur gives us HTML as a string, and now we need to figure out how to convert it into an actual page that Cypress can visit.
+
+## Visiting email as HTML page
+
+Alright, we have email content, and we want to be minimalists during this step too. At the same time, Cypress needs a URL that we can visit to run our assertions.
+
+For that purpose, we decided to store the email content on the filesystem and run a local static server to serve it as an HTML web page.
+
+It's impossible to access the filesystem from Cypress directly as tests are executed in the browser, so defining the task is necessary to write to the disk. In our plugin file:
+
+```js
+const serveEmail = ({ name, emailContent }) => {
+  const filename = `${name}_${uuidv4()}.html`;
+  const filepath = path.resolve(__dirname, "../../downloads", filename);
+
+  fs.writeFileSync(filepath, emailContent, { encoding: "utf-8" });
+
+  return filename;
+};
+
+module.exports = (on, config) => {
+  on("task", {
+    serveEmail,
+  });
+};
+```
+
+Each time we call `cy.task("serveEmail", { name: "boardingDocuments", emailContent })` from our tests, email is saved into the download folder, and its unique generated path is yielded.
+
+Now we need a server to visit the file as an HTML page. The most straightforward way we found is to use [http-server](https://www.npmjs.com/package/http-server) package. We execute the following command before cypress tests:
+
+```bash
+yarn http-server downloads --port 8080 &> /dev/null &
+```
+
+With this in place, let's load the email content as if it was just a regular web page:
+
+```js
+cy
+  .task("serveEmail", { name: "boardingDocuments", emailContent })
+  .then(path => cy.visit(path))
+```
+
+Voilá! 🎉
+
+![Cypress test](/blog/cypress-mailing/mailing-test.gif)
+
+Mind the fact that `CYPRESS_BASE_URL` should be set to `localhost:8080` to successfully load the web page.
+
+## Putting it all together
+
+One note, though: we will probably repeat these steps in all other tests: first calling `cy.sendEmail()` command to send and receive emails, followed by `cy.task("serveEmail")` to store and visit them. So why not combine it all into one master command?
+
+```js
+const getEmailContent = ({ email, name, payload, apiEndpoint }) => {
+  return cy.sendEmail({ email, payload, apiEndpoint }).then((message) => {
+    cy.mailosaurDeleteMessage(message.id);
+
+    return cy
+      .task("serveEmail", {
+          name,
+          email: message.html?.body || "",
+      })
+      .then((visitPath: string) => {
+          return { message, visitPath };
+      });
+  });
+};
+```
+
+With these optimizations, all we need to do in our code to retrieve the email we've just sent is then limited to a single command call:
+
+```js
+describe("Boarding documents", () => {
+  it("email with boarding travel documents has correct content", () => {
+    const recipient = "some-generated-email@mailosaur.io";
+    const apiEndpoint = "/api/emails/boarding";
+    const name = "boardingDocuments";
+    const payload = { bookingId: 123456 /* ... */ };
+
+    cy.getEmailContent({ email: recipient, apiEndpoint, payload, name }).then(
+      ({ visitPath, message }) => {
+
+        // We can still assert on message object from Mailosaur
+        expect(message.subject).to.equal(
+          `Booking ${payload.bookingId}: Here are your travel documents`,
+        );
+
+        // or visit the email and assert on the content
+        cy.visit(visitPath);
+        cy.findByRole("link", { name: /Download/ }).should("be.visible");
+        cy
+          .findByText("We've attached your travel documents.")
+          .should("be.visible");
+      },
+    );
+  });
+});
+```
+
+## Final remarks
+
+I've shown you how to assert that email content meets certain criteria. We could also verify the correctness of links leading back to the application. Still, as Cypress is currently limited to visiting single origin per test and we already went to localhost, we can't do it right here.
+
+For such purposes, we have another set of tests, but that's already a different story.
+
+<DotSeparator />
+
+*Special thanks to [Furbo](https://furbo.sk/)*.
+
+*Drawings made with the help of <a href="https://www.freepik.com" title="Freepik">Freepik</a> icons from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a>.*
