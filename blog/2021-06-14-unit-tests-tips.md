@@ -2,7 +2,7 @@
 slug: unit-tests-tips
 title: "Tips to improve your unit tests with jest & testing-library"
 image: /blog/unit-tests-tips/opener.png
-description: "TODO"
+description: "Clear test report of any console logs. Match the text, even if it contains HTML, reuse global context, and more."
 tags: [testing-library, jest, react]
 ---
 
