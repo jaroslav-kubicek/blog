@@ -19,7 +19,7 @@
   "dependencies": {
     "@docusaurus/core": "2.0.0-beta.9",
     "@docusaurus/preset-classic": "2.0.0-beta.9",
-    "@kiwicom/orbit-components": "^2.3.0",
+    "@kiwicom/orbit-components": "^2.4.0",
     "@kiwicom/orbit-design-tokens": "^0.13.2",
     "@mdx-js/react": "^1.6.21",
     "@svgr/webpack": "^5.5.0",
