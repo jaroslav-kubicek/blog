@@ -1768,10 +1768,10 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@kiwicom/orbit-components@^2.5.0":
-  version "2.5.0"
-  resolved "https://registry.yarnpkg.com/@kiwicom/orbit-components/-/orbit-components-2.5.0.tgz#1aeb43f28546464cbd30ce8026d85e2f949dabdf"
-  integrity sha512-WPqYZut29M8gjdCpvrkr75Mccfq6rhzMAJO6A2Y5iyK0KfflbCOqSRDrS5rNkwBjbKrnvwhA1bp5p20LGGp/LQ==
+"@kiwicom/orbit-components@^2.5.1":
+  version "2.5.1"
+  resolved "https://registry.yarnpkg.com/@kiwicom/orbit-components/-/orbit-components-2.5.1.tgz#d430bef091798e19b52d2771b6cbfedfed3b44a1"
+  integrity sha512-3ViMXsFB71cMxDoUa7rKcDJqWlliZcvNMP49Lz5j43nZMCkMK+C2ZKStSyPNlCJg7eoAX0cDtRAz5hg8p5KPBA==
   dependencies:
     "@adeira/js" "^1.3.0"
     "@kiwicom/orbit-design-tokens" "^1.0.4"
