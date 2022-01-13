@@ -1730,13 +1730,6 @@
     react-popper "^2.2.5"
     react-uid "^2.3.1"
 
-"@kiwicom/orbit-design-tokens@^0.13.2":
-  version "0.13.10"
-  resolved "https://registry.yarnpkg.com/@kiwicom/orbit-design-tokens/-/orbit-design-tokens-0.13.10.tgz#c08a2ed8459442ef56eacc50d0fd135eb3a439f0"
-  integrity sha512-fu/JKQR4vrZgjuAUCd89+Xa9A0kVlUZye/GKgI5/6vgE2emYWQhf2Zhs605k6ls/1tzBTiPwyXhm4HmGmTmOgQ==
-  dependencies:
-    ramda "^0.27.1"
-
 "@kiwicom/orbit-design-tokens@^1.0.4":
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/@kiwicom/orbit-design-tokens/-/orbit-design-tokens-1.0.4.tgz#8d9d7c3261cc0acb432a4da498fa133b2f540b30"
