@@ -63,7 +63,7 @@ module.exports = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Kubajz.dev, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Kubajz.dev, Built with Docusaurus.`,
     },
   },
   presets: [
