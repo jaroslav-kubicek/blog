@@ -1717,23 +1717,23 @@
   resolved "https://registry.yarnpkg.com/@humanwhocodes/object-schema/-/object-schema-1.2.1.tgz#b520529ec21d8e5945a1851dfd1c32e94e39ff45"
   integrity sha512-ZnQMnLV4e7hDlUvw8H+U8ASL02SS2Gn6+9Ac3wGGLIe7+je2AeAOxPY+izIPJDfFDb7eDjev0Us8MO1iFRN8hA==
 
-"@kiwicom/orbit-components@^2.6.1":
-  version "2.6.1"
-  resolved "https://registry.yarnpkg.com/@kiwicom/orbit-components/-/orbit-components-2.6.1.tgz#a7393847d677eacf81c9991037aad9467f3e6eb5"
-  integrity sha512-70oWnc/fuoWHPNTVIeIJ2Z3ebB5mHZxnxsGvtRrPxTcLLpo93F7CwM0HrLFRU7DaSqZdh5xDjqsusAc44LF0AA==
+"@kiwicom/orbit-components@^2.8.1":
+  version "2.8.1"
+  resolved "https://registry.yarnpkg.com/@kiwicom/orbit-components/-/orbit-components-2.8.1.tgz#a78d840198daa9f365b4435479ddd92eca760522"
+  integrity sha512-qi6ou2wQ9+GjH088oYPwPh+xxHAHRCy85imi1aMatNjIo2+mKO/CTqJNhoBI5u84u5Et3pnkO2i4Pnh8AgNVVQ==
   dependencies:
     "@adeira/js" "^1.3.0"
-    "@kiwicom/orbit-design-tokens" "^1.0.4"
+    "@kiwicom/orbit-design-tokens" "^1.0.6"
     "@popperjs/core" "^2.9.2"
     body-scroll-lock "^4.0.0-beta.0"
     react-hot-toast "^2.1.1"
     react-popper "^2.2.5"
     react-uid "^2.3.1"
 
-"@kiwicom/orbit-design-tokens@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@kiwicom/orbit-design-tokens/-/orbit-design-tokens-1.0.4.tgz#8d9d7c3261cc0acb432a4da498fa133b2f540b30"
-  integrity sha512-n+bOQueCh4LNf1LJY8Ev40nVZCJ1AG08BxS/IJJKDIMZSkibslcSCl9dreiEetVMdInoMkGzfeNu31+0dxHg6A==
+"@kiwicom/orbit-design-tokens@^1.0.4", "@kiwicom/orbit-design-tokens@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@kiwicom/orbit-design-tokens/-/orbit-design-tokens-1.0.6.tgz#e29b25b29285c8142bce7bbd21a2a9d20b8be87c"
+  integrity sha512-4bP9JdcJv4xqxoPGFB/0cL7+Cc+yLaa1mPJdY4QDc+ZhpmQLe+5YdUGiT9OqYWXDGLuk66HPUw3MlaJPrrgcgg==
   dependencies:
     ramda "^0.27.1"
     rimraf "^3.0.2"
