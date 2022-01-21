@@ -1730,10 +1730,10 @@
     react-popper "^2.2.5"
     react-uid "^2.3.1"
 
-"@kiwicom/orbit-design-tokens@^1.0.4":
-  version "1.0.4"
-  resolved "https://registry.yarnpkg.com/@kiwicom/orbit-design-tokens/-/orbit-design-tokens-1.0.4.tgz#8d9d7c3261cc0acb432a4da498fa133b2f540b30"
-  integrity sha512-n+bOQueCh4LNf1LJY8Ev40nVZCJ1AG08BxS/IJJKDIMZSkibslcSCl9dreiEetVMdInoMkGzfeNu31+0dxHg6A==
+"@kiwicom/orbit-design-tokens@^1.0.4", "@kiwicom/orbit-design-tokens@^1.0.6":
+  version "1.0.6"
+  resolved "https://registry.yarnpkg.com/@kiwicom/orbit-design-tokens/-/orbit-design-tokens-1.0.6.tgz#e29b25b29285c8142bce7bbd21a2a9d20b8be87c"
+  integrity sha512-4bP9JdcJv4xqxoPGFB/0cL7+Cc+yLaa1mPJdY4QDc+ZhpmQLe+5YdUGiT9OqYWXDGLuk66HPUw3MlaJPrrgcgg==
   dependencies:
     ramda "^0.27.1"
     rimraf "^3.0.2"
