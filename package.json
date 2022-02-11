@@ -17,7 +17,7 @@
     "lint": "yarn eslint '*.{js,ts,tsx}' '**/*.{js,ts,tsx}' --ignore-path .gitignore --quiet --report-unused-disable-directives"
   },
   "dependencies": {
-    "@docusaurus/core": "2.0.0-beta.14",
+    "@docusaurus/core": "2.0.0-beta.15",
     "@docusaurus/preset-classic": "2.0.0-beta.14",
     "@kiwicom/orbit-components": "^2.6.1",
     "@kiwicom/orbit-design-tokens": "^1.0.6",
