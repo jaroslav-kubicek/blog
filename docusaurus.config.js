@@ -11,9 +11,6 @@ module.exports = {
   organizationName: "jaroslav-kubicek", // Usually your GitHub org/user name.
   projectName: "blog", // Usually your repo name.
   themeConfig: {
-    gtag: {
-      trackingID: "G-ZVDDRND2W4",
-    },
     navbar: {
       title: "Kubajz.dev",
       logo: {
@@ -85,6 +82,9 @@ module.exports = {
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
+        },
+        gtag: {
+          trackingID: "G-ZVDDRND2W4",
         },
       }),
     ],
