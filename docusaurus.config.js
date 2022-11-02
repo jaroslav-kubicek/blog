@@ -19,6 +19,7 @@ module.exports = {
       },
       items: [
         { to: "/", label: "Blog", position: "left" },
+        { to: "/page/about", label: "About me", position: "left" },
         {
           href: "https://github.com/jaroslav-kubicek/blog",
           label: "GitHub",
@@ -87,6 +88,22 @@ module.exports = {
         },
         gtag: {
           trackingID: "G-ZVDDRND2W4",
+        },
+        pages: {
+          path: "src/pages",
+          routeBasePath: "/page",
+          include: ["**/*.{js,jsx,ts,tsx,md,mdx}"],
+          exclude: [
+            "**/_*.{js,jsx,ts,tsx,md,mdx}",
+            "**/_*/**",
+            "**/*.test.{js,jsx,ts,tsx}",
+            "**/__tests__/**",
+          ],
+          mdxPageComponent: "@theme/MDXPage",
+          remarkPlugins: [],
+          rehypePlugins: [],
+          beforeDefaultRemarkPlugins: [],
+          beforeDefaultRehypePlugins: [],
         },
       }),
     ],
