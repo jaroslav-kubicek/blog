@@ -1,6 +1,6 @@
 // @ts-check
 
-/** @type {import('@docusaurus/types').ConfigOptions} */
+/** @type {import('@docusaurus/types').Config} */
 module.exports = {
   title: "Kubajz.dev",
   tagline: "Personal blog about programing & stuff.",
@@ -68,10 +68,12 @@ module.exports = {
       "@docusaurus/preset-classic",
       /** @type {import('@docusaurus/preset-classic').Options} */
       ({
-        docs: {
-          sidebarPath: require.resolve("./sidebars.js"),
-          editUrl: "https://github.com/jaroslav-kubicek/blog/edit/master/",
-        },
+        docs: false,
+        // DOCs disabled
+        // {
+        //  sidebarPath: require.resolve("./sidebars.js"),
+        //  editUrl: "https://github.com/jaroslav-kubicek/blog/edit/master/",
+        // },
         blog: {
           feedOptions: {
             type: "all",
