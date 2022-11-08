@@ -1,22 +1,22 @@
 ---
 slug: tilt-first-impressions
 title: "Local dev environment with Tilt.dev"
-image: TODO
-description: "TODO"
+image: /blog/tilt-impressions/tilt-logo.png
+description: "Using Tilt.dev to improve the developer experience of local setup"
 tags: [kubernetes, devX]
 ---
 
-TODO intro
+A few months ago we sit together to rethink our local development at Productboard. Product teams delivered features that relied now on more than one backend service and our set of bash scripts and docker-compose files stopped working. We decided to replace it with deployments to the local Kubernetes cluster in Docker Desktop to bring the local environment closer to production. And adopt Tilt to improve the developer experience.
 
 <!--truncate-->
 
 ## Backstory
 
-Some time ago, we've come to the point where our monolithic Ruby backend in Productboard stopped scaling as the company grew so the decision was made to introduce microservice architecture. That always poses some challenges, yet the tooling to deploy multiple services into the Kubernetes cluster was established quite soon. But what about running the application locally during development? 
+A long time ago, we've come to the point where our monolithic Ruby backend in Productboard stopped scaling as the company grew so the decision was made to introduce microservice architecture. That always poses some challenges, yet the tooling to deploy multiple services into the Kubernetes cluster was established quite soon. But what about running the application locally during development? 
 
 Naturally, it was no longer feasible to teach everyone how to run every service on bare metal, and expect to make it work without hassle. So dockerization was the most convenient next step. To automate the whole local setup, we've created *"toolkit"*, a set of bash scripts and docker-compose files to install commonly used binaries, spin up the application in Docker Desktop, initialize the database, and other tasks.
 
-But with time and an increasing number of services even this solution stopped working - we had to maintain two different formats of the configurations for every service, maintenance of routing rules for nginx container lagged behind ingress definitions and decK configs and the overall developer experience wasn't very high to say at least.
+But with time and an increasing number of services even this solution stopped working - we had to maintain two different formats of the configurations for every service, maintenance of routing rules for nginx container lagged behind ingress definitions and Kong decK configs and the overall developer experience wasn't very high to say at least.
 
 For these reasons, we decided on the next step in the evolution: use Kubernetes for the local environment as well to reuse what we already have for staging and production.
 
@@ -26,11 +26,11 @@ We desired to strip our colleagues from product teams from all the complexity of
 
 ## About Tilt.dev
 
-At the first glance, Tilt is similar to Skaffold, it just does much more. When you run `tilt up` to trigger the local deployment, you aren't provided with much terminal output, you get the link to the Web interface instead:
+At the first glance, Tilt is similar to tools like Skaffold or DevSpace, it just does much more. When you run `tilt up` to trigger the local deployment, you aren't provided with much terminal output, you get the link to the Web interface instead:
 
 ![Tilt web interface](/blog/tilt-impressions/tilt-dashboard.png)
 
-This is in my opinion the direction that such tooling around Kubernetes should follow. Even without a deep understanding, I immediately have an overview of my environment, how many services are deployed, and which are still spinning up. And if something fails, I can trigger a redeploy.
+This is in my opinion the direction such tooling around Kubernetes should follow. Even without a deep understanding, I immediately have an overview of my environment, how many services are deployed, and which are still spinning up. And if something fails, I can trigger a redeploy.
 
 ## Flexibility of Tiltfile
 
@@ -67,9 +67,9 @@ Somehow most of your engineers found it quite confusing, therefore our custom-ma
 local("helm repo add {} {}".format(name, url))
 ```
 
-## Tilt Web UI
-
 The function `local` runs an arbitrary command on a host machine before deployment and always outputs to a special `(Tiltfile)` resource which makes it great for any tasks to prepare the environment without distracting developers. 
+
+## Tilt Web UI
 
 Speaking of Web UI with a list of resources, we probably appreciate the most a button to rotate specific services when things go awry:
 
@@ -130,7 +130,9 @@ We use the same [local_resource](https://docs.tilt.dev/api.html#api.local_resour
 
 ![Relay watch](/blog/tilt-impressions/disable-resource.png)
 
-There's one last thing we're missing a lot and that's the ability to execute commands in the pods directly from UI. Tilt shows pod ids conveniently but having such a possibility would mean that we no longer need to leave Web UI and switch back to the terminal to use kubectl exec command.
+There's one last thing we're missing a lot and that's the ability to execute commands in the pods directly from UI. Tilt shows pod ids conveniently but having such a possibility would mean that we no longer need to leave Web UI and switch back to the terminal to use `kubectl exec` command.
+
+These are some nitpicks that would deserve further improvements but running both backend services and local processes like Relay compiler above or unit tests in a single unified UI is a great step.
 
 ---
 
