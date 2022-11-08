@@ -27,7 +27,7 @@ const Comments = () => {
     }
   }, []);
 
-  return <div id="comment-system" />;
+  return <div style={{ width: "100%" }} id="comment-system" />;
 };
 
 export default Comments;
