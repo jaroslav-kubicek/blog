@@ -26,7 +26,7 @@ We desired to strip our colleagues from product teams from all the complexity of
 
 ## About Tilt.dev
 
-At the first glance, Tilt is similar to tools like Skaffold or DevSpace, it just does much more. When you run `tilt up` to trigger the local deployment, you aren't provided with much terminal output, you get the link to the Web interface instead:
+At the first glance, Tilt is similar to tools like [Skaffold](https://skaffold.dev/), it just does much more for us. When you run `tilt up` to trigger the local deployment, you aren't provided with much terminal output, you get the link to the Web interface instead:
 
 ![Tilt web interface](/blog/tilt-impressions/tilt-dashboard.png)
 
@@ -34,7 +34,7 @@ This is in my opinion the direction such tooling around Kubernetes should follow
 
 ## Flexibility of Tiltfile
 
-We've been relying on Tilt for over the last 6 months and one of the things we appreciate about it since then is that it uses Starlank for configuration, a language originally built for the Bazel build ecosystem. Having the power of Python-like language shines especially in comparison to alternatives like DevSpace which uses yaml for configuration.
+We've been relying on Tilt for over the last 6 months and one of the things we appreciate about it since then is that it uses Starlank for configuration, a language originally built for the Bazel build ecosystem. Having the power of Python-like language shines especially in comparison to alternatives like [DevSpace](https://www.devspace.sh/) which uses yaml for configuration.
 
 For example, you can use conditional statements and it all feels natural:
 
@@ -130,7 +130,7 @@ We use the same [local_resource](https://docs.tilt.dev/api.html#api.local_resour
 
 ![Relay watch](/blog/tilt-impressions/disable-resource.png)
 
-There's one last thing we're missing a lot and that's the ability to execute commands in the pods directly from UI. Tilt shows pod ids conveniently but having such a possibility would mean that we no longer need to leave Web UI and switch back to the terminal to use `kubectl exec` command.
+There's one last thing we're missing a lot and that's the ability to execute commands in the pods directly from UI. Tilt shows pod ids conveniently but having such a possibility would mean that we no longer need to leave Web UI and switch back to the terminal to use `kubectl exec` command. This is on the contrary feature solved well in DevSpace.
 
 These are some nitpicks that would deserve further improvements but running both backend services and local processes like Relay compiler above or unit tests in a single unified UI is a great step.
 
