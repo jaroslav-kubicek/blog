@@ -1,14 +1,7 @@
 {
-  "compilerOptions": {
-    // Target latest version of ECMAScript.
-    "target": "es5",
-    // Search under node_modules for non-relative imports.
-    "moduleResolution": "node",
-    // Enable strictest settings like strictNullChecks & noImplicitAny.
-    "strict": true,
-    // Do not output any files
-    "noEmit": true
-  },
+  // This file is not used in compilation. It is here just for a nice editor experience.
   "extends": "@tsconfig/docusaurus/tsconfig.json",
-  "include": ["src/"]
+  "compilerOptions": {
+    "baseUrl": "."
+  },
 }

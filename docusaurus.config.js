@@ -1,3 +1,6 @@
+// @ts-check
+
+/** @type {import('@docusaurus/types').Config} */
 module.exports = {
   title: "Kubajz.dev",
   tagline: "Personal blog about programing & stuff.",
@@ -8,9 +11,6 @@ module.exports = {
   organizationName: "jaroslav-kubicek", // Usually your GitHub org/user name.
   projectName: "blog", // Usually your repo name.
   themeConfig: {
-    gtag: {
-      trackingID: "G-ZVDDRND2W4",
-    },
     navbar: {
       title: "Kubajz.dev",
       logo: {
@@ -18,14 +18,8 @@ module.exports = {
         src: "img/avatar_small.png",
       },
       items: [
-        // TODO add here tips from README repo
-        // {
-        //   to: 'docs/',
-        //   activeBasePath: 'docs',
-        //   label: 'Docs',
-        //   position: 'left',
-        // },
         { to: "/", label: "Blog", position: "left" },
+        { to: "/page/about", label: "About me", position: "left" },
         {
           href: "https://github.com/jaroslav-kubicek/blog",
           label: "GitHub",
@@ -67,17 +61,20 @@ module.exports = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Kubajz.dev, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Kubajz.dev, Built with Docusaurus.`,
     },
   },
   presets: [
     [
       "@docusaurus/preset-classic",
-      {
-        docs: {
-          sidebarPath: require.resolve("./sidebars.js"),
-          editUrl: "https://github.com/jaroslav-kubicek/blog/edit/master/",
-        },
+      /** @type {import('@docusaurus/preset-classic').Options} */
+      ({
+        docs: false,
+        // DOCs disabled
+        // {
+        //  sidebarPath: require.resolve("./sidebars.js"),
+        //  editUrl: "https://github.com/jaroslav-kubicek/blog/edit/master/",
+        // },
         blog: {
           feedOptions: {
             type: "all",
@@ -89,7 +86,26 @@ module.exports = {
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
         },
-      },
+        gtag: {
+          trackingID: "G-ZVDDRND2W4",
+        },
+        pages: {
+          path: "src/pages",
+          routeBasePath: "/page",
+          include: ["**/*.{js,jsx,ts,tsx,md,mdx}"],
+          exclude: [
+            "**/_*.{js,jsx,ts,tsx,md,mdx}",
+            "**/_*/**",
+            "**/*.test.{js,jsx,ts,tsx}",
+            "**/__tests__/**",
+          ],
+          mdxPageComponent: "@theme/MDXPage",
+          remarkPlugins: [],
+          rehypePlugins: [],
+          beforeDefaultRemarkPlugins: [],
+          beforeDefaultRehypePlugins: [],
+        },
+      }),
     ],
   ],
 };
